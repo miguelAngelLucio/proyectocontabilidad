@@ -1,0 +1,539 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+
+<meta charset="UTF-8">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Balance General Profesional</title>
+
+<link rel="stylesheet" href="balanceGeneral.css">
+
+</head>
+
+<body>
+
+<header>
+
+    <h1>Balance General</h1>
+
+    <nav>
+
+        <a href="index.html">Inicio</a>
+
+        <a href="balanceGeneral.html">Balance General</a>
+
+        <a href="reporte.html">Reporte</a>
+
+        <a href="estadoResultados.html">Estado de Resultados</a>
+
+    </nav>
+
+</header>
+
+<div class="container">
+
+    <div class="tablaT">
+
+        <!-- ACTIVOS -->
+        <div class="columna">
+
+            <div class="bloque">
+
+                <h2>ACTIVOS</h2>
+
+                <details>
+
+                    <summary>Activos Circulantes</summary>
+
+                    <details>
+
+                        <summary>Disponible</summary>
+
+                        <input type="number" placeholder="Caja" class="activo" id="caja">
+
+                        <input type="number" placeholder="Bancos" class="activo" id="bancos">
+
+                        <input type="number" placeholder="Efectivo" class="activo" id="efectivo">
+
+                        <input type="number" placeholder="Equivalentes" class="activo" id="equivalentes">
+
+                    </details>
+
+                    <details>
+
+                        <summary>Realizable</summary>
+
+                        <input type="number" placeholder="Clientes" class="activo" id="clientes">
+
+                        <input type="number" placeholder="Inventarios" class="activo" id="inventarios">
+
+                        <input type="number" placeholder="Documentos por cobrar" class="activo" id="documentosCobrar">
+
+                    </details>
+
+                </details>
+
+                <details>
+
+                    <summary>Activos No Circulantes</summary>
+
+                    <details>
+
+                        <summary>Intangibles</summary>
+
+                        <input type="number" placeholder="Patentes" class="activo" id="patentes">
+
+                        <input type="number" placeholder="Marcas" class="activo" id="marcas">
+
+                    </details>
+
+                </details>
+
+                <div class="total" id="totalActivos">
+
+                    Total Activos: $0.00
+
+                </div>
+
+            </div>
+
+        </div>
+
+        <!-- PASIVOS Y CAPITAL -->
+        <div class="columna">
+
+            <!-- PASIVOS -->
+            <div class="bloque">
+
+                <h2>PASIVOS</h2>
+
+                <details>
+
+                    <summary>Pasivos</summary>
+
+                    <input type="number" placeholder="Proveedores" class="pasivo" id="proveedores">
+
+                    <input type="number" placeholder="Acreedores" class="pasivo" id="acreedores">
+
+                    <input type="number" placeholder="Documentos por pagar" class="pasivo" id="documentosPagar">
+
+                </details>
+
+                <div class="total" id="totalPasivos">
+
+                    Total Pasivos: $0.00
+
+                </div>
+
+            </div>
+
+            <!-- CAPITAL -->
+            <div class="bloque">
+
+                <h2>CAPITAL</h2>
+
+                <details>
+
+                    <summary>Capital Contable</summary>
+
+                    <input type="number" placeholder="Capital social" class="capital" id="capitalSocial">
+
+                    <input type="number" placeholder="Aportaciones" class="capital" id="aportaciones">
+
+                    <input type="number" placeholder="Donaciones" class="capital" id="donaciones">
+
+                    <input type="number" placeholder="Utilidades y pérdidas" class="capital" id="utilidades">
+
+                </details>
+
+                <div class="total" id="totalCapital">
+
+                    Total Capital: $0.00
+
+                </div>
+
+                <div class="total" id="totalPasivoCapital">
+
+                    Total Pasivo + Capital: $0.00
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+    <!-- VERIFICACION -->
+    <div id="verificacion" class="verificacion">
+
+        Esperando datos...
+
+    </div>
+
+    <!-- GUARDAR -->
+    <div style="margin-top:25px; text-align:center;">
+
+        <input
+            type="text"
+            id="nombreBalance"
+            placeholder="Nombre del balance"
+        >
+
+        <br><br>
+
+        <button id="btnGuardar">
+
+            Guardar Balance
+
+        </button>
+
+    </div>
+
+    <!-- BALANCES -->
+    <div class="bloque" style="margin-top:25px;">
+
+        <h2>Balances Guardados</h2>
+
+        <ul id="listaBalances"></ul>
+
+    </div>
+
+</div>
+
+<script>
+
+localStorage.removeItem("balances");
+
+let balances =
+JSON.parse(localStorage.getItem("balances")) || [];
+
+let inputs =
+document.querySelectorAll("input");
+
+inputs.forEach(input => {
+
+    input.addEventListener(
+        "input",
+        calcularTotales
+    );
+
+});
+
+function sumarClase(clase){
+
+    let elementos =
+    document.querySelectorAll("." + clase);
+
+    let total = 0;
+
+    elementos.forEach(el => {
+
+        let valor = parseFloat(el.value);
+
+        if(!isNaN(valor)){
+
+            total += valor;
+
+        }
+
+    });
+
+    return total;
+
+}
+
+function obtenerValor(id){
+
+    let elemento =
+    document.getElementById(id);
+
+    if(elemento){
+
+        let valor =
+        parseFloat(elemento.value);
+
+        return isNaN(valor)
+        ? 0
+        : valor;
+
+    }
+
+    return 0;
+
+}
+
+function calcularTotales(){
+
+    let totalA =
+    sumarClase("activo");
+
+    let totalP =
+    sumarClase("pasivo");
+
+    let totalC =
+    sumarClase("capital");
+
+    let ladoDerecho =
+    totalP + totalC;
+
+    let diferencia =
+    totalA - ladoDerecho;
+
+    document.getElementById(
+        "totalActivos"
+    ).textContent =
+    "Total Activos: $" +
+    totalA.toFixed(2);
+
+    document.getElementById(
+        "totalPasivos"
+    ).textContent =
+    "Total Pasivos: $" +
+    totalP.toFixed(2);
+
+    document.getElementById(
+        "totalCapital"
+    ).textContent =
+    "Total Capital: $" +
+    totalC.toFixed(2);
+
+    document.getElementById(
+        "totalPasivoCapital"
+    ).textContent =
+    "Total Pasivo + Capital: $" +
+    ladoDerecho.toFixed(2);
+
+    let ver =
+    document.getElementById(
+        "verificacion"
+    );
+
+    if(
+        Math.abs(diferencia) < 0.01
+        && totalA !== 0
+    ){
+
+        ver.innerHTML =
+        "✔ Balance Correcto";
+
+        ver.className =
+        "verificacion correcto";
+
+    }
+
+    else if(diferencia > 0){
+
+        ver.innerHTML =
+        "🔴 Faltan $" +
+        diferencia.toFixed(2);
+
+        ver.className =
+        "verificacion incorrecto";
+
+    }
+
+    else{
+
+        ver.innerHTML =
+        "🟡 Excedente $" +
+        Math.abs(diferencia).toFixed(2);
+
+        ver.className =
+        "verificacion excedente";
+
+    }
+
+}
+
+document
+.getElementById("btnGuardar")
+.addEventListener(
+    "click",
+    guardarBalance
+);
+
+function guardarBalance(){
+
+    let nombre =
+    document.getElementById(
+        "nombreBalance"
+    ).value;
+
+    let totalA =
+    sumarClase("activo");
+
+    let totalP =
+    sumarClase("pasivo");
+
+    let totalC =
+    sumarClase("capital");
+
+    let nuevoBalance = {
+
+        nombre:
+        nombre || "Sin nombre",
+
+        fecha:
+        new Date().toLocaleString(),
+
+        activos: {
+
+            caja:
+            obtenerValor("caja"),
+
+            bancos:
+            obtenerValor("bancos"),
+
+            efectivo:
+            obtenerValor("efectivo"),
+
+            equivalentes:
+            obtenerValor("equivalentes"),
+
+            clientes:
+            obtenerValor("clientes"),
+
+            inventarios:
+            obtenerValor("inventarios")
+
+        },
+
+        pasivos: {
+
+            proveedores:
+            obtenerValor("proveedores"),
+
+            acreedores:
+            obtenerValor("acreedores"),
+
+            documentosPagar:
+            obtenerValor("documentosPagar")
+
+        },
+
+        capital: {
+
+            capitalSocial:
+            obtenerValor("capitalSocial"),
+
+            aportaciones:
+            obtenerValor("aportaciones"),
+
+            donaciones:
+            obtenerValor("donaciones"),
+
+            utilidades:
+            obtenerValor("utilidades")
+
+        },
+
+        totales: {
+
+            activos: totalA,
+
+            pasivos: totalP,
+
+            capital: totalC,
+
+            pasivoCapital:
+            totalP + totalC
+
+        }
+
+    };
+
+    balances.push(nuevoBalance);
+
+    localStorage.setItem(
+        "balances",
+        JSON.stringify(balances)
+    );
+
+    mostrarBalances();
+
+    alert(
+        "Balance guardado correctamente"
+    );
+
+}
+
+function mostrarBalances(){
+
+    let lista =
+    document.getElementById(
+        "listaBalances"
+    );
+
+    lista.innerHTML = "";
+
+    balances.forEach((bal, index) => {
+
+        let li =
+        document.createElement("li");
+
+        li.innerHTML = `
+
+        <b>${bal.nombre}</b>
+
+        <br>
+
+        ${bal.fecha}
+
+        <br><br>
+
+        Activos:
+        $${bal.totales.activos.toFixed(2)}
+
+        |
+
+        Pasivos:
+        $${bal.totales.pasivos.toFixed(2)}
+
+        |
+
+        Capital:
+        $${bal.totales.capital.toFixed(2)}
+
+        `;
+
+        let btn =
+        document.createElement("button");
+
+        btn.textContent =
+        "Eliminar";
+
+        btn.style.marginTop =
+        "10px";
+
+        btn.onclick = function(){
+
+            balances.splice(index, 1);
+
+            localStorage.setItem(
+                "balances",
+                JSON.stringify(balances)
+            );
+
+            mostrarBalances();
+
+        };
+
+        li.appendChild(btn);
+
+        lista.appendChild(li);
+
+    });
+
+}
+
+mostrarBalances();
+
+</script>
+
+</body>
+
+</html>

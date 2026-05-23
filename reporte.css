@@ -1,0 +1,322 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Segoe UI', sans-serif;
+}
+
+html {
+    scroll-behavior: smooth;
+}
+
+body {
+    background: #0b1220;
+    color: #e5e7eb;
+    width: 100%;
+    min-height: 100vh;
+    overflow-x: hidden;
+}
+
+/* ===== HEADER ===== */
+
+header {
+    width: 100%;
+    background: #111827;
+    padding: 30px 20px;
+    text-align: center;
+    border-bottom: 1px solid #1f2937;
+}
+
+header h1 {
+    font-size: clamp(2rem, 4vw, 3rem);
+    margin-bottom: 15px;
+    color: white;
+}
+
+/* ===== NAV ===== */
+
+nav {
+    margin-top: 20px;
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 12px;
+}
+
+nav a {
+    color: white;
+    text-decoration: none;
+    padding: 10px 18px;
+    border-radius: 12px;
+    background: #1f2937;
+    border: 1px solid #334155;
+    transition: 0.3s ease;
+    font-size: clamp(0.9rem, 1vw, 1rem);
+}
+
+nav a:hover {
+    background: #38bdf8;
+    color: #0b1220;
+    transform: translateY(-2px);
+    box-shadow: 0 0 15px rgba(56, 189, 248, 0.5);
+}
+
+/* ===== CONTAINER ===== */
+
+.container {
+    width: min(95%, 1700px);
+    margin: auto;
+    padding: 30px 20px;
+}
+
+/* ===== GRID REPORTES ===== */
+
+.reporte {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+    gap: 25px;
+    width: 100%;
+}
+
+/* ===== TARJETAS ===== */
+
+.tarjetaReporte {
+    background: #111827;
+    padding: 24px;
+    border-radius: 20px;
+    border: 1px solid #1f2937;
+    box-shadow: 0 10px 25px rgba(0,0,0,0.35);
+    transition: 0.3s ease;
+    width: 100%;
+}
+
+.tarjetaReporte:hover {
+    transform: translateY(-6px);
+    border-color: #38bdf8;
+    box-shadow: 0 15px 30px rgba(56,189,248,0.18);
+}
+
+/* ===== TITULO ===== */
+
+.tarjetaReporte h1 {
+    font-size: clamp(1.4rem, 2vw, 2rem);
+    color: #38bdf8;
+    margin-bottom: 12px;
+}
+
+/* ===== NOMBRE ===== */
+
+.nombreReporte {
+    font-size: 1rem;
+    color: #94a3b8;
+    margin-bottom: 15px;
+}
+
+/* ===== SECCIONES ===== */
+
+.seccion {
+    margin-bottom: 20px;
+    padding: 14px;
+    background: #0b1220;
+    border-radius: 14px;
+    border: 1px solid #1f2937;
+    transition: 0.3s;
+}
+
+.seccion:hover {
+    border-color: #38bdf8;
+}
+
+.seccion h2 {
+    font-size: clamp(1rem, 1.3vw, 1.3rem);
+    color: #93c5fd;
+    margin-bottom: 12px;
+}
+
+/* ===== LINEAS ===== */
+
+.linea {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 10px;
+    font-size: clamp(0.9rem, 1vw, 1rem);
+    margin: 8px 0;
+    padding: 8px 0;
+    border-bottom: 1px solid #1f2937;
+    color: #cbd5e1;
+    word-break: break-word;
+}
+
+/* ===== TOTAL ===== */
+
+.total {
+    font-weight: bold;
+    font-size: clamp(1rem, 1.1vw, 1.15rem);
+    margin-top: 12px;
+    color: #e5e7eb;
+}
+
+/* ===== RESULTADO ===== */
+
+.resultado {
+    margin-top: 18px;
+    text-align: center;
+    padding: 14px;
+    border-radius: 12px;
+    font-weight: bold;
+    font-size: clamp(0.95rem, 1vw, 1.1rem);
+    background: #1f2937;
+}
+
+/* ===== ESTADOS ===== */
+
+.correcto {
+    background: #065f46;
+    color: #a7f3d0;
+}
+
+.incorrecto {
+    background: #7f1d1d;
+    color: #fecaca;
+}
+
+/* ===== BOTONES ===== */
+
+.botonesReporte {
+    display: flex;
+    gap: 12px;
+    margin-top: 20px;
+    flex-wrap: wrap;
+}
+
+/* ===== BOTONES BASE ===== */
+
+.btnExcel,
+.btnPDF {
+    flex: 1;
+    min-width: 140px;
+    border: none;
+    padding: 14px;
+    border-radius: 14px;
+    color: white;
+    font-weight: bold;
+    cursor: pointer;
+    transition: 0.3s ease;
+    font-size: 1rem;
+}
+
+/* ===== EXCEL ===== */
+
+.btnExcel {
+    background: linear-gradient(135deg, #22c55e, #15803d);
+}
+
+.btnExcel:hover {
+    transform: scale(1.04);
+    box-shadow: 0 0 15px rgba(34,197,94,0.35);
+}
+
+/* ===== PDF ===== */
+
+.btnPDF {
+    background: linear-gradient(135deg, #ef4444, #b91c1c);
+}
+
+.btnPDF:hover {
+    transform: scale(1.04);
+    box-shadow: 0 0 15px rgba(239,68,68,0.35);
+}
+
+/* ===== SCROLL ===== */
+
+.reporte::-webkit-scrollbar {
+    height: 10px;
+}
+
+.reporte::-webkit-scrollbar-thumb {
+    background: #38bdf8;
+    border-radius: 10px;
+}
+
+.reporte::-webkit-scrollbar-track {
+    background: #0f172a;
+}
+
+/* ===== RESPONSIVE ===== */
+
+@media (max-width: 1200px) {
+
+    .reporte {
+        grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    }
+}
+
+@media (max-width: 768px) {
+
+    header {
+        padding: 25px 15px;
+    }
+
+    nav {
+        gap: 10px;
+    }
+
+    .container {
+        padding: 20px 12px;
+    }
+
+    .tarjetaReporte {
+        padding: 18px;
+    }
+
+    .botonesReporte {
+        flex-direction: column;
+    }
+
+    .btnExcel,
+    .btnPDF {
+        width: 100%;
+    }
+}
+
+@media (max-width: 600px) {
+
+    body {
+        font-size: 14px;
+    }
+
+    header h1 {
+        font-size: 1.8rem;
+    }
+
+    nav a {
+        width: 100%;
+        text-align: center;
+    }
+
+    .linea {
+        font-size: 14px;
+    }
+
+    .resultado,
+    .total {
+        font-size: 14px;
+    }
+}
+
+@media (max-width: 400px) {
+
+    header h1 {
+        font-size: 1.5rem;
+    }
+
+    nav a {
+        font-size: 13px;
+        padding: 8px;
+    }
+
+    .tarjetaReporte {
+        padding: 15px;
+    }
+}

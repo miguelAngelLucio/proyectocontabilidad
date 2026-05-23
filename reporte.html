@@ -1,0 +1,362 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-widht,initial-scale=1.0">
+<title>Reporte Financiero</title>
+
+<link rel="stylesheet" href="reporte.css">
+
+</head>
+
+<body>
+
+<header>
+    <h1>Reporte Financiero</h1>
+
+    <nav>
+
+        <a href="index.html" class="btn-inicio">Inicio</a>
+        <a href="balanceGeneral.html" class="btn-inicio">Balance General</a>
+        <a href="reporte.html" class="btn-inicio">Reporte</a>
+        <a href="estadoResultados.html" class="btn-inicio">Estado de Resultados</a>
+
+    </nav>
+
+</header>
+
+<div class="container">
+
+<div class="reporte">
+
+</div>
+
+</div>
+
+<!-- LIBRERÍAS -->
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+
+<script src="https://cdn.sheetjs.com/xlsx-0.20.2/package/dist/xlsx.full.min.js"></script>
+
+<script>
+
+let balances =
+JSON.parse(localStorage.getItem("balances")) || [];
+
+let contenedor =
+document.querySelector(".reporte");
+
+contenedor.innerHTML = "";
+
+balances.forEach((balance, index) => {
+
+    let correcto =
+
+    Math.abs(
+        balance.totales.activos -
+        balance.totales.pasivoCapital
+    ) < 0.01;
+
+    let html = `
+
+    <div class="tarjetaReporte" id="reporte${index}">
+
+    <h1>
+
+    BALANCE GENERAL
+
+    <br>
+
+    <span class="nombreReporte">
+
+    ${balance.nombre}
+
+    </span>
+
+    </h1>
+
+    <!-- ACTIVOS -->
+
+    <div class="seccion">
+
+    <h2>ACTIVOS</h2>
+
+    `;
+
+    for(let cuenta in balance.activos){
+
+        if(balance.activos[cuenta] > 0){
+
+            html += `
+
+            <div class="linea">
+
+            <span>${cuenta}</span>
+
+            <span>
+            $${balance.activos[cuenta]}
+            </span>
+
+            </div>
+
+            `;
+
+        }
+
+    }
+
+    html += `
+
+    <div class="linea total">
+
+    <span>Total Activos:</span>
+
+    <span>
+    $${balance.totales.activos.toFixed(2)}
+    </span>
+
+    </div>
+
+    </div>
+
+    <!-- PASIVOS -->
+
+    <div class="seccion">
+
+    <h2>PASIVOS</h2>
+
+    `;
+
+    for(let cuenta in balance.pasivos){
+
+        if(balance.pasivos[cuenta] > 0){
+
+            html += `
+
+            <div class="linea">
+
+            <span>${cuenta}</span>
+
+            <span>
+            $${balance.pasivos[cuenta]}
+            </span>
+
+            </div>
+
+            `;
+
+        }
+
+    }
+
+    html += `
+
+    <div class="linea total">
+
+    <span>Total Pasivos:</span>
+
+    <span>
+    $${balance.totales.pasivos.toFixed(2)}
+    </span>
+
+    </div>
+
+    </div>
+
+    <!-- CAPITAL -->
+
+    <div class="seccion">
+
+    <h2>CAPITAL CONTABLE</h2>
+
+    `;
+
+    for(let cuenta in balance.capital){
+
+        if(balance.capital[cuenta] > 0){
+
+            html += `
+
+            <div class="linea">
+
+            <span>${cuenta}</span>
+
+            <span>
+            $${balance.capital[cuenta]}
+            </span>
+
+            </div>
+
+            `;
+
+        }
+
+    }
+
+    html += `
+
+    <div class="linea total">
+
+    <span>Total Capital:</span>
+
+    <span>
+    $${balance.totales.capital.toFixed(2)}
+    </span>
+
+    </div>
+
+    </div>
+
+    <hr>
+
+    <div class="linea total">
+
+    <span>Pasivo + Capital:</span>
+
+    <span>
+    $${balance.totales.pasivoCapital.toFixed(2)}
+    </span>
+
+    </div>
+
+    <!-- BOTONES -->
+
+    <div class="botonesReporte">
+
+        <button
+        class="btnExcel"
+        onclick="exportarExcel(${index})"
+        >
+            Convertir a Excel
+        </button>
+
+        <button
+        class="btnPDF"
+        onclick="exportarPDF(${index})"
+        >
+            Convertir a PDF
+        </button>
+
+    </div>
+
+    <!-- RESULTADO -->
+
+    <div class="
+    resultado
+    ${correcto ? "correcto" : "incorrecto"}
+    ">
+
+    ${correcto
+        ? "✔ El balance cuadra"
+        : "❌ El balance NO cuadra"
+    }
+
+    </div>
+
+    </div>
+
+    `;
+
+    contenedor.innerHTML += html;
+
+});
+
+function exportarPDF(index){
+
+    let elemento =
+    document.getElementById(
+        "reporte" + index
+    );
+
+    let opciones = {
+
+        margin:0.5,
+
+        filename:
+        "Reporte_Financiero.pdf",
+
+        image:{
+            type:"jpeg",
+            quality:1
+        },
+
+        html2canvas:{
+            scale:2
+        },
+
+        jsPDF:{
+            unit:"in",
+            format:"letter",
+            orientation:"portrait"
+        }
+
+    };
+
+    html2pdf()
+    .set(opciones)
+    .from(elemento)
+    .save();
+
+}
+
+function exportarExcel(index){
+
+    let balance =
+    balances[index];
+
+    let datos = [
+
+        ["Nombre", balance.nombre],
+
+        ["Fecha", balance.fecha],
+
+        [],
+
+        ["ACTIVOS"],
+
+        ["Total Activos",
+        balance.totales.activos],
+
+        [],
+
+        ["PASIVOS"],
+
+        ["Total Pasivos",
+        balance.totales.pasivos],
+
+        [],
+
+        ["CAPITAL"],
+
+        ["Total Capital",
+        balance.totales.capital]
+
+    ];
+
+    let hoja =
+    XLSX.utils.aoa_to_sheet(datos);
+
+    let libro =
+    XLSX.utils.book_new();
+
+    XLSX.utils.book_append_sheet(
+        libro,
+        hoja,
+        "Reporte"
+    );
+
+    XLSX.writeFile(
+        libro,
+        "Reporte_Financiero.xlsx"
+    );
+
+}
+
+</script>
+
+</body>
+
+</html>
